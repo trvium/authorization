@@ -4,5 +4,8 @@ mod controllers;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/get-token", routes![controllers::token_controller::get_token])
+    rocket::build().mount(
+        "/api-key",
+        routes![controllers::api_key_controller::generate_key],
+    )
 }

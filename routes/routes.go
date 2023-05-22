@@ -7,4 +7,6 @@ import (
 
 func SetupRoutes(router *gin.Engine) {
 	router.GET("/hello", handlers.HelloHandler)
+	router.GET("/token", handlers.TokenHandler)
+	router.GET("/info", handlers.InfoHandler)
 }

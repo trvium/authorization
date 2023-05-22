@@ -21,7 +21,7 @@ func InfoHandler(c *gin.Context) {
 	email := claims.Email
 	plan_type := "Enterprise"
 	plan_limit := 500
-	plan_used := 125
+	plan_used := 120
 
 	hash := md5.Sum([]byte(email))
 	hash_string := hex.EncodeToString(hash[:])

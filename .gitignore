@@ -35,7 +35,7 @@ secrets.json
 
 # Environment files
 .env
-.env.*
+!.env.example
 
 # Other files and directories
 logs/

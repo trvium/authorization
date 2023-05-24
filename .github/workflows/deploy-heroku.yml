@@ -20,4 +20,3 @@ jobs:
           touch .env
           echo API_KEY="${{ secrets.JWT_SECRET }}" >> .env
           cp .trvium/Dockerfile Dockerfile
-          echo Dockerfile

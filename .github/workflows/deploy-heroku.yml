@@ -18,7 +18,7 @@ jobs:
       - name: Copy Files
         run: |
           touch .env
-          echo API_KEY="${{ secrets.JWT_SECRET }}" >> .env
+          echo JWT_SECRET="${{ secrets.JWT_SECRET }}" >> .env
           cp .trvium/Dockerfile Dockerfile
 
       - name: Build, Push and Release a Docker container to Heroku

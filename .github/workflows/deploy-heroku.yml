@@ -1,0 +1,20 @@
+name: Deploy Heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-heroku:
+    environment: ${{ github.ref_name }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Copy Files
+        run: |
+          touch .env
+          echo API_KEY="${{ secrets.JWT_SECRET }}" >> .env
+          cp .trvium/Dockerfile Dockerfile
+          echo Dockerfile

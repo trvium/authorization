@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/trvium/authorization/routes"
@@ -8,7 +10,13 @@ import (
 
 func main() {
 	godotenv.Load()
+
 	router := gin.Default()
 	routes.SetupRoutes(router)
-	router.Run(":8000")
+
+	port := ":" + os.Getenv("PORT")
+	if port == ":" {
+		port = ":8000"
+	}
+	router.Run(port)
 }

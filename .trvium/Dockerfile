@@ -35,5 +35,8 @@ WORKDIR /app
 ENV PATH="/usr/local/bin:${PATH}"
 ENV ENV_FILE="/app/.env"
 
+# Expose port 8000 to the outside
+EXPOSE 8000
+
 # Run the application when the container starts
 CMD ["myapp"]

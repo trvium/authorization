@@ -17,11 +17,6 @@ func main() {
 		return
 	}
 
-	err = db.Migrate()
-	if err != nil {
-		return
-	}
-
 	router := gin.Default()
 	routes.SetupRoutes(router)
 

@@ -3,7 +3,6 @@ package db
 import (
 	"os"
 
-	"github.com/trvium/authorization/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -18,19 +17,6 @@ func SetupDB() error {
 	}
 
 	DB = db
-
-	return nil
-}
-
-func Migrate() error {
-	m := []interface{}{
-		&models.Plan{},
-	}
-
-	err := DB.AutoMigrate(m...)
-	if err != nil {
-		return err
-	}
 
 	return nil
 }

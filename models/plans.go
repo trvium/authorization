@@ -1,7 +1,11 @@
 package models
 
+import (
+	"github.com/google/uuid"
+)
+
 type Plan struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Limit int    `json:"limit"`
+	ID    uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
+	Name  string    `json:"name"`
+	Limit int       `json:"limit"`
 }

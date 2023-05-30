@@ -6,7 +6,7 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine) {
-	router.GET("/hello", handlers.HelloHandler)
-	router.GET("/token", handlers.TokenHandler)
-	router.GET("/info", handlers.InfoHandler)
+	router.GET("/info", handlers.GetInfo)
+	router.GET("/plan", handlers.FindPlans)
+	router.POST("/plan", handlers.CreatePlans)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/trvium/authorization/utils"
 )
 
-func InfoHandler(c *gin.Context) {
+func GetInfo(c *gin.Context) {
 	token := c.GetHeader("Authorization")
 	token = token[len("Bearer "):]
 

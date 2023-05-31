@@ -24,9 +24,9 @@ func CreatePlans(c *gin.Context) {
 		return
 	}
 
-	db.DB.Create(&models.Plan{Name: "Hobby", Limit: 50})
-	db.DB.Create(&models.Plan{Name: "Business", Limit: 250})
-	db.DB.Create(&models.Plan{Name: "Enterprise", Limit: 500})
+	db.DB.Create(&models.Plan{Name: "Hobby", Quota: 50})
+	db.DB.Create(&models.Plan{Name: "Business", Quota: 250})
+	db.DB.Create(&models.Plan{Name: "Enterprise", Quota: 500})
 
 	db.DB.Find(&plans)
 

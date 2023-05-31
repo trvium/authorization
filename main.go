@@ -12,6 +12,8 @@ import (
 func main() {
 	godotenv.Load()
 
+	db.RunMigrations()
+
 	err := db.SetupDB()
 	if err != nil {
 		return

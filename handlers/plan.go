@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/trvium/authorization/db"
 	"github.com/trvium/authorization/models"
+	"github.com/trvium/authorization/utils"
 )
 
 func FindPlans(c *gin.Context) {
@@ -24,9 +25,9 @@ func CreatePlans(c *gin.Context) {
 		return
 	}
 
-	db.DB.Create(&models.Plan{Name: "Hobby", Quota: 50})
-	db.DB.Create(&models.Plan{Name: "Business", Quota: 250})
-	db.DB.Create(&models.Plan{Name: "Enterprise", Quota: 500})
+	db.DB.Create(&models.Plan{Name: "Hobby", Quota: 50, ID: utils.GenerateUUID()})
+	db.DB.Create(&models.Plan{Name: "Business", Quota: 250, ID: utils.GenerateUUID()})
+	db.DB.Create(&models.Plan{Name: "Enterprise", Quota: 500, ID: utils.GenerateUUID()})
 
 	db.DB.Find(&plans)
 

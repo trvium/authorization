@@ -1,4 +1,4 @@
-.PHONY: run migrate-up migrate-down
+.PHONY: run migrate-up migrate-down migrate-create
 
 # Carregar as variáveis do arquivo .env
 include .env
@@ -12,3 +12,6 @@ migrate-up:
 
 migrate-down:
 	migrate -path ./db/migrations -database "$(DATABASE_URL)" -verbose down 1
+
+migrate-create:
+	migrate create -ext sql -dir ./db/migrations -seq $(name)

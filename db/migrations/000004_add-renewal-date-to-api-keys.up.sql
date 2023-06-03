@@ -1,0 +1,2 @@
+ALTER TABLE api_keys
+ADD COLUMN renewal_date DATE DEFAULT (CURRENT_DATE + INTERVAL '1 month');

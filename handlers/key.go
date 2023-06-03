@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/trvium/authorization/db"
 	"github.com/trvium/authorization/models"
@@ -19,6 +21,12 @@ func ValidateKey(c *gin.Context) {
 	if !api_key.Valid {
 		c.JSON(401, gin.H{"error": "Invalid API Key"})
 		return
+	}
+
+	if api_key.RenewalDate.Before(time.Now()) || api_key.RenewalDate.Equal(time.Now()) {
+		api_key.RenewalDate = time.Now().AddDate(0, 1, 0)
+		api_key.QuotaUsed = 0
+		db.DB.Save(api_key)
 	}
 
 	user := &models.User{}

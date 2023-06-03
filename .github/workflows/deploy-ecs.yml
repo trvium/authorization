@@ -25,6 +25,7 @@ jobs:
         run: |
           touch .env
           echo JWT_SECRET="${{ secrets.JWT_SECRET }}" >> .env
+          echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> .env
           cp .trvium/Dockerfile Dockerfile
 
       - name: Configure AWS Credentials

@@ -9,7 +9,7 @@ import (
 )
 
 func ValidateKey(c *gin.Context) {
-	input_key := c.Query("key")
+	input_key := c.GetHeader("x-api-key")
 
 	api_key := &models.ApiKey{}
 	err := db.DB.Where("key = ?", input_key).First(api_key).Error

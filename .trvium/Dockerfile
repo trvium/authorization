@@ -1,5 +1,5 @@
 # Use the official Go image as the base image
-FROM golang:1.17-alpine AS build
+FROM golang:1.19.3-alpine AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -16,6 +16,9 @@ COPY . .
 # Copy the .env file to the working directory
 COPY .env ./
 
+# Copy the db/migrations directory to the working directory
+COPY db/migrations ./db/migrations
+
 # Build the application into an executable binary
 RUN go build -o myapp
 
@@ -27,6 +30,9 @@ COPY --from=build /app/myapp /usr/local/bin/myapp
 
 # Copy the .env file to the final image
 COPY --from=build /app/.env /app/.env
+
+# Copy the db/migrations directory to the final image
+COPY --from=build /app/db/migrations /app/db/migrations
 
 # Set the working directory inside the container
 WORKDIR /app

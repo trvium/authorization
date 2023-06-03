@@ -51,7 +51,7 @@ func GetInfo(c *gin.Context) {
 	}
 
 	apiKey := &models.ApiKey{}
-	err = db.DB.Where("user_id = ?", user.ID).First(apiKey).Error
+	err = db.DB.Where("user_id = ? AND valid = ?", user.ID, true).First(apiKey).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			apiKeyEntity := &models.ApiKey{

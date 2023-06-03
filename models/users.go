@@ -5,8 +5,7 @@ import (
 )
 
 type User struct {
-	ID       uuid.UUID `json:"id"`
-	PlanID   uuid.UUID `json:"plan_id"`
-	Email    string    `json:"email"`
+	ID     uuid.UUID `json:"id"`
+	PlanID uuid.UUID `json:"plan_id"`
+	Email  string    `json:"email"`
 }
-

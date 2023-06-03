@@ -1,4 +1,4 @@
-.PHONY: run migrate-up migrate-down migrate-create
+.PHONY: run format test migrate-up migrate-down migrate-create
 
 # Carregar as variáveis do arquivo .env
 include .env
@@ -6,6 +6,12 @@ export
 
 run:
 	docker-compose -f .trvium/docker-compose.yml up --build
+
+format:
+	go fmt ./...
+
+test:
+	go test -v ./...
 
 migrate-up:
 	migrate -path ./db/migrations -database "$(DATABASE_URL)" -verbose up

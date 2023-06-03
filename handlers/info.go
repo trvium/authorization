@@ -21,18 +21,20 @@ func GetInfo(c *gin.Context) {
 	}
 
 	email := claims.Email
-	planName := "Enterprise"
-
-	plan := &models.Plan{}
-	err = db.DB.Where("name = ?", planName).First(plan).Error
-	if err != nil {
-		return
-	}
 
 	user := &models.User{}
 	err = db.DB.Where("email = ?", email).First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
+
+			planName := "Hobby"
+
+			plan := &models.Plan{}
+			err = db.DB.Where("name = ?", planName).First(plan).Error
+			if err != nil {
+				return
+			}
+
 			userEntity := &models.User{
 				ID:     utils.GenerateUUID(),
 				PlanID: plan.ID,
@@ -48,6 +50,12 @@ func GetInfo(c *gin.Context) {
 		} else {
 			return
 		}
+	}
+
+	plan := &models.Plan{}
+	err = db.DB.Where("id = ?", user.PlanID).First(plan).Error
+	if err != nil {
+		return
 	}
 
 	apiKey := &models.ApiKey{}

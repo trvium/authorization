@@ -34,7 +34,5 @@ func ChangePlan(c *gin.Context) {
 	user.PlanID = plan.ID
 	db.DB.Save(user)
 
-	GenerateKey(c)
-
 	c.JSON(200, gin.H{"data": user})
 }

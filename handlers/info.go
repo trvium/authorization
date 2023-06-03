@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/trvium/authorization/db"
 	"github.com/trvium/authorization/models"
@@ -53,11 +55,12 @@ func GetInfo(c *gin.Context) {
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			apiKeyEntity := &models.ApiKey{
-				ID:        utils.GenerateUUID(),
-				UserID:    user.ID,
-				Key:       utils.GenerateSHA256(),
-				Valid:     true,
-				QuotaUsed: 0,
+				ID:          utils.GenerateUUID(),
+				UserID:      user.ID,
+				Key:         utils.GenerateSHA256(),
+				Valid:       true,
+				QuotaUsed:   0,
+				RenewalDate: time.Now().AddDate(0, 1, 0),
 			}
 
 			err = db.DB.Create(apiKeyEntity).Error

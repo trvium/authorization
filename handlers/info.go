@@ -16,7 +16,7 @@ func GetInfo(c *gin.Context) {
 
 	claims, err := utils.DecodeToken(token)
 	if err != nil {
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(401, gin.H{"error": "Unauthorized"})
 		return
 	}
 

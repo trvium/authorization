@@ -13,21 +13,21 @@ func ChangePlan(c *gin.Context) {
 
 	claims, err := utils.DecodeToken(token)
 	if err != nil {
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(401, gin.H{"error": "Unauthorized"})
 		return
 	}
 
 	user := &models.User{}
 	err = db.DB.Where("email = ?", claims.Email).First(user).Error
 	if err != nil {
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(401, gin.H{"error": "User not found"})
 		return
 	}
 
 	plan := &models.Plan{}
 	err = db.DB.Where("id = ?", c.Param("id")).First(plan).Error
 	if err != nil {
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(401, gin.H{"error": "Plan not found"})
 		return
 	}
 

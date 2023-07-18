@@ -6,6 +6,13 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine) {
+	// Health check
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "OK",
+		})
+	})
+
 	router.GET("/plan", handlers.FindPlans)
 	router.POST("/plan", handlers.CreatePlans)
 	router.GET("/info", handlers.GetInfo)

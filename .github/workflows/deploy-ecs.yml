@@ -15,17 +15,22 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: us-east-1
-      REPOSITORY_NAME: trvium-ecr-repository
+      ECR_REPOSITORY_NAME: trvium-ecr-repository
+      ECS_CLUSTER: trvium-ecs-cluster
+      ECS_SERVICE: authorization-ecs-service
+      ECS_TASK_DEFINITION: .github/workflows/authorization-task-definition.json
+      CONTAINER_NAME: authorization-container
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Copy Files
+      - name: Copy Files and Generate JSON Task Definition
         run: |
           touch .env
           echo JWT_SECRET="${{ secrets.JWT_SECRET }}" >> .env
           echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> .env
+          echo ${{ secrets.AWS_TASK_DEFINITION }} > .github/workflows/authorization-task-definition.json
           cp .trvium/Dockerfile Dockerfile
 
       - name: Configure AWS Credentials
@@ -40,10 +45,27 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build and Push Docker Image
+        id: build-push-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ env.REPOSITORY_NAME }}
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY_NAME }}
           IMAGE_TAG: ${{ github.event.repository.name }}-${{ github.ref_name }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: update-task-definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-push-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.update-task-definition.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true

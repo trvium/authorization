@@ -13,6 +13,13 @@ func SetupRoutes(router *gin.Engine) {
 		})
 	})
 
+	// Hello route
+	router.GET("/hello", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "HELLO",
+		})
+	})
+
 	router.GET("/plan", handlers.FindPlans)
 	router.POST("/plan", handlers.CreatePlans)
 	router.GET("/info", handlers.GetInfo)

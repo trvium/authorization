@@ -30,7 +30,9 @@ jobs:
           touch .env
           echo JWT_SECRET="${{ secrets.JWT_SECRET }}" >> .env
           echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> .env
-          echo "${{ secrets.AWS_TASK_DEFINITION }}" > .github/workflows/authorization-task-definition.json
+          echo '
+            ${{ secrets.AWS_TASK_DEFINITION }}
+            ' > .github/workflows/authorization-task-definition.json
           cp .trvium/Dockerfile Dockerfile
           cat .github/workflows/authorization-task-definition.json
 

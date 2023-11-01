@@ -21,6 +21,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Copy Files
+        run: |
+          touch .env
+          echo JWT_SECRET="${{ secrets.JWT_SECRET }}" >> .env
+          echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> .env
+          cp .trvium/Dockerfile Dockerfile
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

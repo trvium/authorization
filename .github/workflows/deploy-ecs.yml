@@ -3,7 +3,7 @@ name: Deploy ECS
 on:
   push:
     branches:
-      - none
+      - main
 
 jobs:
   deploy-ecs:
@@ -15,25 +15,23 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: us-east-1
-      ECR_REPOSITORY_NAME: trvium-ecr-repository
-      ECS_CLUSTER: trvium-ecs-cluster
+      ECR_REPOSITORY_NAME: authorization-ecr-repository
       ECS_SERVICE: authorization-ecs-service
-      ECS_TASK_DEFINITION: .github/workflows/authorization-task-definition.json
+      ECS_CLUSTER: trvium-ecs-cluster
+      ECS_TASK_DEFINITION_NAME: trvium-task-authorization
+      ECS_TASK_DEFINITION_PATH: .github/workflows/task-definition.json
       CONTAINER_NAME: authorization-container
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Copy Files and Generate JSON Task Definition
+      - name: Copy Files and Generate Env
         run: |
           touch .env
           echo JWT_SECRET="${{ secrets.JWT_SECRET }}" >> .env
           echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> .env
           cp .trvium/Dockerfile Dockerfile
-          echo '
-            ${{ secrets.AWS_TASK_DEFINITION }}
-            ' > .github/workflows/authorization-task-definition.json
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -57,11 +55,15 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: update-task-definition
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          task-definition: ${{ env.ECS_TASK_DEFINITION_PATH }}
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-push-image.outputs.image }}
 
@@ -69,6 +71,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.update-task-definition.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.ECS_SERVICE }}
           wait-for-service-stability: true

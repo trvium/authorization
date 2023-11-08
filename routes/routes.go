@@ -6,16 +6,18 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine) {
+	apiGroup := router.Group("/auth")
+
 	// Health check
-	router.GET("/health", func(c *gin.Context) {
+	apiGroup.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "OK",
+			"message": "ok",
 		})
 	})
 
-	router.GET("/plan", handlers.FindPlans)
-	router.POST("/plan", handlers.CreatePlans)
-	router.GET("/info", handlers.GetInfo)
-	router.POST("/key/validate", handlers.ValidateKey)
-	router.PUT("/user/plan/:id", handlers.ChangePlan)
+	apiGroup.GET("/plan", handlers.FindPlans)
+	apiGroup.POST("/plan", handlers.CreatePlans)
+	apiGroup.GET("/info", handlers.GetInfo)
+	apiGroup.POST("/key/validate", handlers.ValidateKey)
+	apiGroup.PUT("/user/plan/:id", handlers.ChangePlan)
 }

@@ -57,7 +57,7 @@ jobs:
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > ${{ env.ECS_TASK_DEFINITION_PATH }}
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: update-task-definition

@@ -6,7 +6,7 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine) {
-	apiGroup := router.Group("/auth")
+	apiGroup := router.Group("/")
 
 	// Health check
 	apiGroup.GET("/health", func(c *gin.Context) {
